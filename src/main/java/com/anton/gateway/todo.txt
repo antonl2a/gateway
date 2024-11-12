@@ -1,0 +1,3 @@
+4.xml
+5. rabbitmq
+9. use one method, based on xml or json
