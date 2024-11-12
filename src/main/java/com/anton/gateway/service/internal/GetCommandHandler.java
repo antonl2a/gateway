@@ -32,7 +32,6 @@ public class GetCommandHandler implements CommandHandler {
     @Override
     public List<CurrencyResult> handleCommand(CommandRequest command) {
         GetCommandRequest getCommand = command.getGetCommand();
-        currencyExchangeService.refreshDbCurrencyRecords();
         currencyExchangeService.checkForDuplicateId(command.getId());
         if (currencyExchangeService.validateCurrenciesExist(getCommand.getCurrency())) {
             throw new NoSuchCurrencyException(getCommand.getCurrency());

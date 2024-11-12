@@ -28,7 +28,6 @@ public class HistoryCommandHandler implements CommandHandler{
     @Override
     public List<CurrencyResult> handleCommand(CommandRequest command) {
         HistoryCommandRequest historyCommand = command.getHistoryCommand();
-        currencyExchangeService.refreshDbCurrencyRecords();
         currencyExchangeService.checkForDuplicateId(command.getId());
         if (currencyExchangeService.validateCurrenciesExist(historyCommand.getCurrency())) {
             throw new NoSuchCurrencyException(historyCommand.getCurrency());

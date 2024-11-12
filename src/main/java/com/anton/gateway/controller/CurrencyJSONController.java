@@ -19,7 +19,7 @@ import static com.anton.gateway.domain.ServiceType.EXT_SERVICE_1;
 import static com.anton.gateway.domain.ServiceType.EXT_SERVICE_2;
 
 @RestController
-@RequestMapping(path = "/json_api")
+@RequestMapping(path = "/json_api", consumes = MediaType.APPLICATION_JSON_VALUE)
 public class CurrencyJSONController {
 
     public static final String LATEST_CURRENCY_ENDPOINT = "/current";
@@ -36,14 +36,14 @@ public class CurrencyJSONController {
         this.rabbitRequestSenderService = rabbitRequestSenderService;
     }
 
-    @PostMapping(path = LATEST_CURRENCY_ENDPOINT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = LATEST_CURRENCY_ENDPOINT)
     public ResponseEntity<CurrencyResult> getLatestCurrencyRecord(@RequestBody LatestCurrencySchema latestCurrencyRequest) {
         CurrencyResult result = currencySchemaRequestProcessor.processLatest(latestCurrencyRequest, EXT_SERVICE_1);
         rabbitRequestSenderService.sendRequestToRabbit();
         return new ResponseEntity<>(result, result.getResponseStatus());
     }
 
-    @PostMapping(path = RECENT_CURRENCY_ENDPOINT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = RECENT_CURRENCY_ENDPOINT)
     public ResponseEntity<List<CurrencyResult>> getRecentCurrencyRecords(@RequestBody RecentCurrencySchema recentCurrencyRequest) {
         List<CurrencyResult> currencyResults = currencySchemaRequestProcessor.processRecent(recentCurrencyRequest, EXT_SERVICE_1);
         rabbitRequestSenderService.sendRequestToRabbit();

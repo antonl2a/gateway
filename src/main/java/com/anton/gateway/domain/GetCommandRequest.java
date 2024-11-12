@@ -1,17 +1,21 @@
 package com.anton.gateway.domain;
 
-import jakarta.xml.bind.annotation.*;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
-@XmlType(propOrder = { "consumer", "currency" })
-@XmlAccessorType(XmlAccessType.FIELD)
 public class GetCommandRequest {
-    @XmlAttribute
+
+    @JacksonXmlProperty(isAttribute = true, localName = "consumer")
     private String consumer;
 
-    @XmlElement
+    @JacksonXmlProperty(localName = "currency")
     private String currency;
 
     public GetCommandRequest() {
+    }
+
+    public GetCommandRequest(String consumer, String currency) {
+        this.consumer = consumer;
+        this.currency = currency;
     }
 
     // Getters and Setters

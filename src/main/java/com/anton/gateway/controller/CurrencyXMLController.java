@@ -11,11 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.List;
 
-import static com.anton.gateway.domain.ServiceType.EXT_SERVICE_1;
-import static com.anton.gateway.domain.ServiceType.EXT_SERVICE_2;
 
 @RestController
 public class CurrencyXMLController {

@@ -1,23 +1,25 @@
 package com.anton.gateway.domain;
 
-
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
-
-@XmlAccessorType(XmlAccessType.FIELD)
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 public class HistoryCommandRequest {
 
-    @XmlAttribute(name = "consumer")
+
+    @JacksonXmlProperty(isAttribute = true, localName = "consumer")
     private String consumer;
 
-    @XmlAttribute(name = "currency")
+    @JacksonXmlProperty(isAttribute = true, localName = "currency")
     private String currency;
 
-    @XmlAttribute(name = "period")
+    @JacksonXmlProperty(isAttribute = true, localName = "period")
     private Integer period;
 
     public HistoryCommandRequest() {
+    }
+
+    public HistoryCommandRequest(String consumer, String currency, Integer period) {
+        this.consumer = consumer;
+        this.currency = currency;
+        this.period = period;
     }
 
     // Getters and Setters

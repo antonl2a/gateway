@@ -1,23 +1,27 @@
 package com.anton.gateway.domain;
 
 
-import jakarta.xml.bind.annotation.*;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
-@XmlRootElement(name = "command")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({GetCommandRequest.class, HistoryCommandRequest.class})
+@JacksonXmlRootElement(localName = "command")
 public class CommandRequest {
 
-    @XmlAttribute
+    @JacksonXmlProperty(isAttribute = true, localName = "id")
     private String id;
-
-    @XmlElement(name = "get", required = true)
+    @JacksonXmlProperty(localName = "get")
     public GetCommandRequest getCommand;
 
-    @XmlElement(name = "history")
+    @JacksonXmlProperty(localName = "history")
     private HistoryCommandRequest historyCommand;
 
     public CommandRequest() {
+    }
+
+    public CommandRequest(String id, GetCommandRequest getCommand, HistoryCommandRequest historyCommand) {
+        this.id = id;
+        this.getCommand = getCommand;
+        this.historyCommand = historyCommand;
     }
 
     // Getters and Setters
