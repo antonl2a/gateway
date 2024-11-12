@@ -6,6 +6,7 @@ import com.anton.gateway.domain.RecentCurrencySchema;
 import com.anton.gateway.exception.DuplicateRequestException;
 import com.anton.gateway.exception.NoSuchCurrencyException;
 import com.anton.gateway.service.CurrencySchemaRequestProcessor;
+import com.anton.gateway.service.rabbitmq.RabbitRequestSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,20 +27,26 @@ public class CurrencyJSONController {
 
     @Autowired
     private final CurrencySchemaRequestProcessor currencySchemaRequestProcessor;
+    @Autowired
+    private final RabbitRequestSenderService rabbitRequestSenderService;
 
-    public CurrencyJSONController(CurrencySchemaRequestProcessor currencySchemaRequestProcessor) {
+
+    public CurrencyJSONController(CurrencySchemaRequestProcessor currencySchemaRequestProcessor, RabbitRequestSenderService rabbitRequestSenderService) {
         this.currencySchemaRequestProcessor = currencySchemaRequestProcessor;
+        this.rabbitRequestSenderService = rabbitRequestSenderService;
     }
 
     @PostMapping(path = LATEST_CURRENCY_ENDPOINT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CurrencyResult> getLatestCurrencyRecord(@RequestBody LatestCurrencySchema latestCurrencyRequest) {
         CurrencyResult result = currencySchemaRequestProcessor.processLatest(latestCurrencyRequest, EXT_SERVICE_1);
+        rabbitRequestSenderService.sendRequestToRabbit();
         return new ResponseEntity<>(result, result.getResponseStatus());
     }
 
     @PostMapping(path = RECENT_CURRENCY_ENDPOINT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CurrencyResult>> getRecentCurrencyRecords(@RequestBody RecentCurrencySchema recentCurrencyRequest) {
         List<CurrencyResult> currencyResults = currencySchemaRequestProcessor.processRecent(recentCurrencyRequest, EXT_SERVICE_1);
+        rabbitRequestSenderService.sendRequestToRabbit();
         return new ResponseEntity<>(currencyResults, HttpStatus.OK);
     }
 

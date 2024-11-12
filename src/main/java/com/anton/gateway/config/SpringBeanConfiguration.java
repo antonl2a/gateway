@@ -29,9 +29,8 @@ public class SpringBeanConfiguration {
 
     @Bean
     public CurrencyExchangeService currencyExchangeService(RestTemplate restTemplate, ObjectMapper objectMapper, CurrencyRecordRepository currencyRecordRepository,
-                                                           RequestRecordRepository requestRecordRepository, RedisTemplate<String, String> redisTemplate,
-                                                           ApplicationStartTimeService applicationStartTimeService) {
-        return new CurrencyExchangeService(restTemplate, objectMapper, currencyRecordRepository, requestRecordRepository, redisTemplate, applicationStartTimeService);
+                                                           RequestRecordRepository requestRecordRepository, RedisTemplate<String, String> redisTemplate) {
+        return new CurrencyExchangeService(restTemplate, objectMapper, currencyRecordRepository, requestRecordRepository, redisTemplate);
     }
 
     @Bean

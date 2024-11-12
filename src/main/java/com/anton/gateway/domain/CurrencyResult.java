@@ -3,9 +3,6 @@ package com.anton.gateway.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.http.HttpStatus;
 
-import java.util.Collections;
-import java.util.List;
-
 public class CurrencyResult {
 
 

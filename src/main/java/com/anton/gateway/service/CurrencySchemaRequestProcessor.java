@@ -4,9 +4,7 @@ import com.anton.gateway.domain.*;
 import com.anton.gateway.exception.NoSuchCurrencyException;
 import com.anton.gateway.repository.CurrencyRecordRepository;
 import com.anton.gateway.repository.RequestRecordRepository;
-import com.anton.gateway.util.GatewayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

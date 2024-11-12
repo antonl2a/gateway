@@ -5,19 +5,16 @@ import com.anton.gateway.domain.ExchangeRatesDTO;
 import com.anton.gateway.exception.DuplicateRequestException;
 import com.anton.gateway.repository.CurrencyRecordRepository;
 import com.anton.gateway.repository.RequestRecordRepository;
-import com.anton.gateway.service.internal.ApplicationStartTimeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -42,18 +39,16 @@ public class CurrencyExchangeService {
     private final CurrencyRecordRepository currencyExchangeRepository;
     private final RequestRecordRepository requestRecordRepository;
     private final RedisTemplate<String, String> redisTemplate;
-    private final ApplicationStartTimeService startTimeService;
     @Autowired
     public CurrencyExchangeService(RestTemplate restTemplate,
                                    ObjectMapper objectMapper,
                                    CurrencyRecordRepository currencyExchangeRepository, RequestRecordRepository requestRecordRepository,
-                                   RedisTemplate<String, String> redisTemplate, ApplicationStartTimeService startTimeService) {
+                                   RedisTemplate<String, String> redisTemplate) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
         this.currencyExchangeRepository = currencyExchangeRepository;
         this.requestRecordRepository = requestRecordRepository;
         this.redisTemplate = redisTemplate;
-        this.startTimeService = startTimeService;
     }
 
     // Fetch exchange rates from Fixer.io raboti

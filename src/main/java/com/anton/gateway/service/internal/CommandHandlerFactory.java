@@ -1,7 +1,6 @@
 package com.anton.gateway.service.internal;
 
 import com.anton.gateway.domain.CommandRequest;
-import com.anton.gateway.domain.GetCommandRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

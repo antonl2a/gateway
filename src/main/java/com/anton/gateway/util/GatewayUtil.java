@@ -3,9 +3,9 @@ package com.anton.gateway.util;
 import com.anton.gateway.domain.*;
 import org.springframework.http.HttpStatus;
 
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class GatewayUtil {
@@ -31,5 +31,11 @@ public class GatewayUtil {
             currencyResults.add(currencyResult);
         }
         return currencyResults;
+    }
+
+    public static String getDate(Long receivedAt) {
+        return Instant.ofEpochMilli(receivedAt)
+                .atZone(ZoneId.of("UTC"))
+                .toLocalDateTime().toString();
     }
 }

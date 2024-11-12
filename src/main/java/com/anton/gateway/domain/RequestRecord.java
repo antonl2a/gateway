@@ -1,10 +1,8 @@
 package com.anton.gateway.domain;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Columns;
-
-import java.time.Instant;
 import java.util.Objects;
+import static com.anton.gateway.util.GatewayUtil.getDate;
 
 @Entity
 @Table(name = "RequestRecord")
@@ -101,5 +99,17 @@ public class RequestRecord {
     @Override
     public int hashCode() {
         return Objects.hash(serviceType, requestId, receivedAt, clientId, currency);
+    }
+
+    @Override
+    public String toString() {
+        return "RequestRecord{" +
+                "hours=" + hours +
+                ", currency='" + currency + '\'' +
+                ", clientId='" + clientId + '\'' +
+                ", receivedAt=" + getDate(receivedAt) +
+                ", requestId='" + requestId + '\'' +
+                ", serviceType=" + serviceType +
+                '}';
     }
 }

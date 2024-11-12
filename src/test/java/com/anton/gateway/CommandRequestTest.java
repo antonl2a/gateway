@@ -2,7 +2,6 @@ package com.anton.gateway;
 
 import com.anton.gateway.domain.CommandRequest;
 import com.anton.gateway.domain.GetCommandRequest;
-import com.anton.gateway.domain.HistoryCommandRequest;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -14,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class CommandRequestTest {
 
-//    @Test
+    @Test
     void testUnmarshalCommandRequest() throws JAXBException {
         String xml = """
                 <command id="12344">
@@ -25,7 +24,7 @@ public class CommandRequestTest {
                 """;
 
         // Set up JAXB context and unmarshaller
-        JAXBContext context = JAXBContext.newInstance(CommandRequest.class, GetCommandRequest.class, HistoryCommandRequest.class);
+        JAXBContext context = JAXBContext.newInstance(CommandRequest.class);
         Unmarshaller unmarshaller = context.createUnmarshaller();
 
         // Unmarshal the XML into a CommandRequest object

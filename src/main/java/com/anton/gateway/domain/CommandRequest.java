@@ -11,10 +11,10 @@ public class CommandRequest {
     @XmlAttribute
     private String id;
 
-    @XmlElementRef(name = "get", required = true)
+    @XmlElement(name = "get", required = true)
     public GetCommandRequest getCommand;
 
-    @XmlElementRef(name = "history")
+    @XmlElement(name = "history")
     private HistoryCommandRequest historyCommand;
 
     public CommandRequest() {

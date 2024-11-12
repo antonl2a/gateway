@@ -5,9 +5,7 @@ import com.anton.gateway.exception.NoSuchCurrencyException;
 import com.anton.gateway.repository.CurrencyRecordRepository;
 import com.anton.gateway.service.CurrencyExchangeService;
 import com.anton.gateway.service.RequestService;
-import com.anton.gateway.util.GatewayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
