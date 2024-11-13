@@ -51,14 +51,12 @@ public class CurrencyExchangeService {
         this.redisTemplate = redisTemplate;
     }
 
-    // Fetch exchange rates from Fixer.io raboti
     public ExchangeRatesDTO getExchangeRatesFromApi() {
         String url = FIXER_API_URL + "?access_key=" + apiKey;
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
         return parseResponseToDTO(response.getBody());
     }
 
-    // Parse API response to DTO raboti
     private ExchangeRatesDTO parseResponseToDTO(String response) {
         try {
             return objectMapper.readValue(response, ExchangeRatesDTO.class);
@@ -67,25 +65,6 @@ public class CurrencyExchangeService {
         }
     }
 
-    //raboti
-    public void checkForDuplicateId(String requestId) {
-        if (requestRecordRepository.findByRequestId(requestId).isPresent()) {
-            throw new DuplicateRequestException(requestId);
-        }
-    }
-
-    // Save exchange rates in Redis raboti
-    public void saveExchangeRatesInRedis(ExchangeRatesDTO exchangeRatesDTO) {
-        // Convert DTO to JSON and store in Redis
-        try {
-            String jsonString = objectMapper.writeValueAsString(exchangeRatesDTO);
-            redisTemplate.opsForList().rightPush(EXCHANGE_RATES_KEY, jsonString);
-        } catch (Exception e) {
-            throw new RuntimeException("Error saving to Redis", e);
-        }
-    }
-
-    // Retrieve exchange rates from Redis raboti
     public ExchangeRatesDTO getExchangeRatesFromRedis() {
         List<String> lastPushedRecordList = redisTemplate.opsForList().range(EXCHANGE_RATES_KEY, -1, -1);
         if (lastPushedRecordList != null && !lastPushedRecordList.isEmpty()) {
@@ -95,12 +74,25 @@ public class CurrencyExchangeService {
                 throw new RuntimeException("Error parsing Redis data", e);
             }
         }
-        return null; // No data in Redis
+        return null;
     }
 
-    // Save exchange rates in the Database
+    public void saveExchangeRatesInRedis(ExchangeRatesDTO exchangeRatesDTO) {
+        try {
+            String jsonString = objectMapper.writeValueAsString(exchangeRatesDTO);
+            redisTemplate.opsForList().rightPush(EXCHANGE_RATES_KEY, jsonString);
+        } catch (Exception e) {
+            throw new RuntimeException("Error saving to Redis", e);
+        }
+    }
+
+    public void checkForDuplicateId(String requestId) {
+        if (requestRecordRepository.findByRequestId(requestId).isPresent()) {
+            throw new DuplicateRequestException(requestId);
+        }
+    }
+
     public void saveExchangeRatesInDatabase(ExchangeRatesDTO exchangeRatesDTO) {
-        // Create the CurrencyRecord entity
         CurrencyRecord currencyRecord = new CurrencyRecord();
         currencyRecord.setSuccess(exchangeRatesDTO.isSuccess());
         currencyRecord.setTimestamp(Instant.ofEpochMilli(exchangeRatesDTO.getTimestamp()));
@@ -108,11 +100,9 @@ public class CurrencyExchangeService {
         LocalDate parsedDate = parse(exchangeRatesDTO.getDate());
         currencyRecord.setDate(parsedDate);
         currencyRecord.setRates(exchangeRatesDTO.getRates());
-        // Save the exchange rates in the database
         currencyExchangeRepository.save(currencyRecord);
     }
 
-    // Refresh exchange rates (fetch from API and store in Redis & DB) raboti
     public void refreshExchangeRateInRedis() {
             ExchangeRatesDTO exchangeRatesDTO = getExchangeRatesFromApi();
             saveExchangeRatesInRedis(exchangeRatesDTO);
@@ -121,46 +111,38 @@ public class CurrencyExchangeService {
     }
 
     public List<ExchangeRatesDTO> getExchangeRatesForLastPeriod(String currency, int hours) {
-        // Get the current time
         long currentTime = Instant.now().toEpochMilli();
 
-        // Get all the stored records in reverse order (latest first)
         List<String> records = redisTemplate.opsForList().range(EXCHANGE_RATES_KEY, -hours, -1);
 
         List<ExchangeRatesDTO> filteredRates = new ArrayList<>();
 
-        // Parse and filter the records based on the timestamp and the provided currency
         for (String record : records) {
             try {
                 ExchangeRatesDTO dto = objectMapper.readValue(record, ExchangeRatesDTO.class);
                 long timestamp = dto.getTimestamp();
 
-                // Check if the record is within the last "hours" hours
                 if (Math.abs(currentTime - timestamp) > (ONE_HOUR_IN_MILLIS * hours)) {
 
-                    // Filter the rates for the provided currency
                     Map<String, Double> filteredRatesMap = new HashMap<>();
                     if (dto.getRates().containsKey(currency)) {
                         filteredRatesMap.put(currency, dto.getRates().get(currency));
-                        dto.setRates(filteredRatesMap); // Set only the provided currency's rate in the DTO
-                        filteredRates.add(dto); // Add the filtered DTO to the result list
+                        dto.setRates(filteredRatesMap);
+                        filteredRates.add(dto);
                     }
                 }
 
-                // Stop when we've collected enough records (matching the period)
                 if (filteredRates.size() == hours) {
                     break;
                 }
             } catch (JsonProcessingException e) {
-                // Handle JSON parsing errors
-                e.printStackTrace();
+                throw new RuntimeException("Failed processing Json", e);
             }
         }
 
         return filteredRates;
     }
 
-    //raboti
     public boolean validateCurrenciesExist(String currency) {
         ExchangeRatesDTO exchangeRatesFromRedis = getExchangeRatesFromRedis();
         return !exchangeRatesFromRedis.getRates().containsKey(currency);

@@ -22,14 +22,11 @@ public class CurrencySchemaRequestProcessor {
     @Autowired
     private final CurrencyRecordRepository currencyRecordRepository;
     @Autowired
-    private final RequestRecordRepository requestRecordRepository;
-    @Autowired
     private final RequestService requestService;
 
-    public CurrencySchemaRequestProcessor(CurrencyExchangeService currencyExchangeService, CurrencyRecordRepository currencyRecordRepository, RequestRecordRepository requestRecordRepository, RequestService requestService) {
+    public CurrencySchemaRequestProcessor(CurrencyExchangeService currencyExchangeService, CurrencyRecordRepository currencyRecordRepository, RequestService requestService) {
         this.currencyExchangeService = currencyExchangeService;
         this.currencyRecordRepository = currencyRecordRepository;
-        this.requestRecordRepository = requestRecordRepository;
         this.requestService = requestService;
     }
 
@@ -41,9 +38,7 @@ public class CurrencySchemaRequestProcessor {
         }
         requestService.saveRequestDataJson(latestCurrencyRequest, serviceType);
         Optional<CurrencyRecord> currencyRecord = currencyRecordRepository.findLastRecord();
-        Double rateForCurrency = currencyRecord
-                .map(record -> record.getRates().get(latestCurrencyRequest.getCurrency()))
-                .orElse(null);
+        Double rateForCurrency = getRateForCurrency(latestCurrencyRequest, currencyRecord);
         return buildCurrencyResult(currencyRecord.get(), rateForCurrency, latestCurrencyRequest.getCurrency());
     }
 
@@ -56,6 +51,12 @@ public class CurrencySchemaRequestProcessor {
         List<ExchangeRatesDTO> exchangeRatesForLastPeriod = currencyExchangeService.getExchangeRatesForLastPeriod(recentCurrencyRequest.getCurrency(), recentCurrencyRequest.getPeriod());
 
         return buildRecentCurrencyList(exchangeRatesForLastPeriod, recentCurrencyRequest.getPeriod());
+    }
+
+    private static Double getRateForCurrency(LatestCurrencySchema latestCurrencyRequest, Optional<CurrencyRecord> currencyRecord) {
+        return currencyRecord
+                .map(record -> record.getRates().get(latestCurrencyRequest.getCurrency()))
+                .orElse(null);
     }
 
 

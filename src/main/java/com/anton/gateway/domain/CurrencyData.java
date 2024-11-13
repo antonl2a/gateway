@@ -3,6 +3,7 @@ package com.anton.gateway.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CurrencyData {
+
     @JsonProperty("currencyBase")
     private String currencyBase = "EUR";
 

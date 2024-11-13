@@ -3,7 +3,6 @@ package com.anton.gateway.domain;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 public class HistoryCommandRequest {
 
-
     @JacksonXmlProperty(isAttribute = true, localName = "consumer")
     private String consumer;
 
@@ -22,7 +21,6 @@ public class HistoryCommandRequest {
         this.period = period;
     }
 
-    // Getters and Setters
     public String getConsumer() {
         return consumer;
     }

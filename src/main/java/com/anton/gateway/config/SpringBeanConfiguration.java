@@ -5,7 +5,6 @@ import com.anton.gateway.repository.RequestRecordRepository;
 import com.anton.gateway.service.CurrencyExchangeService;
 import com.anton.gateway.service.CurrencySchemaRequestProcessor;
 import com.anton.gateway.service.RequestService;
-import com.anton.gateway.service.internal.ApplicationStartTimeService;
 import com.anton.gateway.service.internal.MapToJsonConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
@@ -22,20 +21,15 @@ public class SpringBeanConfiguration {
     }
 
     @Bean
-    public CurrencySchemaRequestProcessor currencySchemaRequestProcessor(CurrencyExchangeService currencyExchangeService, CurrencyRecordRepository currencyRecordRepository, RequestRecordRepository requestRecordRepository,
+    public CurrencySchemaRequestProcessor currencySchemaRequestProcessor(CurrencyExchangeService currencyExchangeService, CurrencyRecordRepository currencyRecordRepository,
                                                                          RequestService requestService) {
-        return new CurrencySchemaRequestProcessor(currencyExchangeService, currencyRecordRepository, requestRecordRepository, requestService);
+        return new CurrencySchemaRequestProcessor(currencyExchangeService, currencyRecordRepository, requestService);
     }
 
     @Bean
     public CurrencyExchangeService currencyExchangeService(RestTemplate restTemplate, ObjectMapper objectMapper, CurrencyRecordRepository currencyRecordRepository,
                                                            RequestRecordRepository requestRecordRepository, RedisTemplate<String, String> redisTemplate) {
         return new CurrencyExchangeService(restTemplate, objectMapper, currencyRecordRepository, requestRecordRepository, redisTemplate);
-    }
-
-    @Bean
-    public ApplicationStartTimeService applicationStartTimeService() {
-        return new ApplicationStartTimeService();
     }
 
     @Bean

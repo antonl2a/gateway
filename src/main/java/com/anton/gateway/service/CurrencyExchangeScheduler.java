@@ -13,8 +13,7 @@ public class CurrencyExchangeScheduler {
         this.currencyExchangeService = currencyExchangeService;
     }
 
-    // Update exchange rates every hour raboti
-    @Scheduled(fixedRate = 3600000)  // 1 hour in milliseconds
+    @Scheduled(fixedRate = 3600000)
     public void refreshExchangeRateInRedis() {
         currencyExchangeService.refreshExchangeRateInRedis();
     }

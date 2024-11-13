@@ -9,7 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface RequestRecordRepository extends JpaRepository<RequestRecord, Long> {
+
     Optional<RequestRecord> findByRequestId(String requestId);
+
     @Query("SELECT r FROM RequestRecord r ORDER BY r.id DESC LIMIT 1")
     Optional<RequestRecord> findLatestRecord();
 

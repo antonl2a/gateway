@@ -9,6 +9,7 @@ public class CommandRequest {
 
     @JacksonXmlProperty(isAttribute = true, localName = "id")
     private String id;
+
     @JacksonXmlProperty(localName = "get")
     public GetCommandRequest getCommand;
 
@@ -24,7 +25,6 @@ public class CommandRequest {
         this.historyCommand = historyCommand;
     }
 
-    // Getters and Setters
     public String getId() {
         return id;
     }

@@ -1,5 +1,7 @@
 package com.anton.gateway.domain;
 
+import java.time.Instant;
+
 public class BaseCurrencySchema {
 
     private String requestId;
@@ -18,8 +20,8 @@ public class BaseCurrencySchema {
         this.requestId = requestId;
     }
 
-    public Long getTimestamp() {
-        return timestamp;
+    public Instant getTimestamp() {
+        return Instant.ofEpochMilli(timestamp);
     }
 
     public void setTimestamp(Long timestamp) {

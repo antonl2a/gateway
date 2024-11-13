@@ -5,14 +5,12 @@ import org.springframework.http.HttpStatus;
 
 public class CurrencyResult {
 
-
     @JsonProperty("currencyInfo")
     CurrencyData currencyData;
 
     private String message;
 
     private HttpStatus responseStatus;
-
 
     public CurrencyResult() {
     }

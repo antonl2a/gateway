@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.anton.gateway.domain.ServiceType.EXT_SERVICE_1;
-import static com.anton.gateway.domain.ServiceType.EXT_SERVICE_2;
 
 @RestController
 @RequestMapping(path = "/json_api", consumes = MediaType.APPLICATION_JSON_VALUE)

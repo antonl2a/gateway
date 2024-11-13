@@ -1,11 +1,16 @@
 package com.anton.gateway.domain;
 
 import jakarta.persistence.*;
+
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Objects;
-import static com.anton.gateway.util.GatewayUtil.getDate;
 
 @Entity
-@Table(name = "RequestRecord")
+@Table(name = "RequestRecord",
+        indexes = {
+        @Index(name = "IX_Request_Id", columnList = "RequestID")
+        })
 public class RequestRecord {
 
     @Id
@@ -17,11 +22,11 @@ public class RequestRecord {
     @Column(name = "ServiceType")
     private ServiceType serviceType;
 
-    @Column(name = "RequestID")
+    @Column(name = "RequestID", nullable = false)
     private String requestId;
 
-    @Column(name = "Time")
-    private Long receivedAt;
+    @Column(name = "Timestamp", columnDefinition = "TIMESTAMP")
+    private Timestamp receivedAt;
 
     @Column(name = "ClientID")
     private String clientId;
@@ -72,12 +77,11 @@ public class RequestRecord {
         this.requestId = requestId;
     }
 
-    public Long getReceivedAt() {
-        return receivedAt;
+    public Instant getTimestamp() {
+        return receivedAt != null ? receivedAt.toInstant() : null;
     }
-
-    public void setReceivedAt(Long receivedAt) {
-        this.receivedAt = receivedAt;
+    public void setTimestamp(Instant timestamp) {
+        this.receivedAt = timestamp != null ? Timestamp.from(timestamp) : null;
     }
 
     public String getClientId() {
@@ -107,7 +111,7 @@ public class RequestRecord {
                 "hours=" + hours +
                 ", currency='" + currency + '\'' +
                 ", clientId='" + clientId + '\'' +
-                ", receivedAt=" + getDate(receivedAt) +
+                ", receivedAt=" + getTimestamp() +
                 ", requestId='" + requestId + '\'' +
                 ", serviceType=" + serviceType +
                 '}';

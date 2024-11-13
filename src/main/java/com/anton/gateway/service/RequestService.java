@@ -20,7 +20,6 @@ public class RequestService {
         this.requestRecordRepository = requestRecordRepository;
     }
 
-    //raboti
     public void saveRequestDataJson(BaseCurrencySchema request, ServiceType serviceType) {
         requestRecordRepository.save(parseRequestToRecordJson(request, serviceType));
     }
@@ -29,13 +28,12 @@ public class RequestService {
         requestRecordRepository.save(parseRequestToRecordXML(request, serviceType));
     }
 
-    //raboti
     private RequestRecord parseRequestToRecordJson(BaseCurrencySchema request, ServiceType serviceType) {
         RequestRecord requestRecord = new RequestRecord();
         requestRecord.setRequestId(request.getRequestId());
         requestRecord.setClientId(request.getClient());
         requestRecord.setServiceType(serviceType);
-        requestRecord.setReceivedAt(request.getTimestamp());
+        requestRecord.setTimestamp(request.getTimestamp());
         requestRecord.setCurrency(request.getCurrency());
         requestRecord.setHours(requestRecord.getHours() != null ? requestRecord.getHours() : 1);
         return requestRecord;
@@ -44,10 +42,10 @@ public class RequestService {
     private RequestRecord parseRequestToRecordXML(CommandRequest request, ServiceType serviceType) {
         RequestRecord requestRecord = new RequestRecord();
         requestRecord.setRequestId(request.getId());
-        requestRecord.setClientId(request.getGetCommand().getCurrency() != null ? request.getGetCommand().getConsumer() : request.getHistoryCommand().getConsumer());
+        requestRecord.setClientId(request.getGetCommand() != null ? request.getGetCommand().getConsumer() : request.getHistoryCommand().getConsumer());
         requestRecord.setServiceType(serviceType);
-        requestRecord.setReceivedAt(Instant.now().getEpochSecond());
-        requestRecord.setCurrency(request.getGetCommand().getCurrency() != null ? request.getGetCommand().getCurrency() : request.getHistoryCommand().getCurrency());
+        requestRecord.setTimestamp(Instant.now());
+        requestRecord.setCurrency(request.getGetCommand() != null ? request.getGetCommand().getCurrency() : request.getHistoryCommand().getCurrency());
         return requestRecord;
     }
 }
